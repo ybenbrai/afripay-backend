@@ -9,9 +9,9 @@ spring:
   profiles:
     active: default
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:afripay}
-    username: ${DB_USER}
-    password: ${DB_PASS}
+    url: jdbc:postgresql://${DB_HOST:mainline.proxy.rlwy.net}:${DB_PORT:33030}/${DB_NAME:railway}
+    username: ${DB_USER:postgres}
+    password: ${2012}
   jpa:
     hibernate:
       ddl-auto: update

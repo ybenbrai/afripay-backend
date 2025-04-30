@@ -40,22 +40,19 @@ class SecurityConfig(
         return http.build()
     }
 
-    @Bean
-    fun corsConfigurationSource(): CorsConfigurationSource {
-        val config = CorsConfiguration().apply {
-            allowedOrigins = listOf(
-                "http://localhost:3000", // local dev
-                "https://afripay-blond.vercel.app" // replace with real Vercel URL
-            )
-            allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
-            allowedHeaders = listOf("*")
-            allowCredentials = true
-        }
-
-        val source = UrlBasedCorsConfigurationSource()
-        source.registerCorsConfiguration("/**", config)
-        return source
+   @Bean
+fun corsConfigurationSource(): CorsConfigurationSource {
+    val config = CorsConfiguration().apply {
+        allowedOriginPatterns = listOf("*") // ✅ use this instead of allowedOrigins
+        allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        allowedHeaders = listOf("*")
+        allowCredentials = true
     }
+
+    val source = UrlBasedCorsConfigurationSource()
+    source.registerCorsConfiguration("/**", config)
+    return source
+}
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()

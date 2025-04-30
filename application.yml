@@ -1,25 +1,20 @@
-server:
-  port: ${PORT:8080}
-
 spring:
   application:
-    name: backend
+    name: ${APP_NAME:Afripay Backend}
   main:
     banner-mode: "off"
   profiles:
-    active: default
-  datasource:
-    url: jdbc:postgresql://${DB_HOST:mainline.proxy.rlwy.net}:${DB_PORT:33030}/${DB_NAME:railway}
-    username: ${DB_USER:postgres}
-    password: ${2012}
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-  flyway:
-    enabled: true
-    locations: classpath:db/migration
-    baseline-on-migrate: true
+    active: ${APP_ENV:dev}
+
+server:
+  port: ${PORT:8000}
+
+jwt:
+  secret: ${JWT_SECRET:my_super_secure_token_key}
+  expiration: ${JWT_EXPIRATION:86400000}
+
+afripay:
+  frontend-url: ${FRONTEND_URL:http://localhost:3000}
 
 logging:
   level:
@@ -27,7 +22,3 @@ logging:
     org.springframework.web: ERROR
     org.hibernate.SQL: ERROR
     org.hibernate.type.descriptor.sql.BasicBinder: ERROR
-
-jwt:
-  secret: ${JWT_SECRET}
-  expiration: ${JWT_EXPIRATION}

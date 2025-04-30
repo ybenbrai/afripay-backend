@@ -19,22 +19,36 @@ class SecurityConfig(
     private val userDetailsService: CustomUserDetailsService
 ) {
 
-    @Bean
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        http
-            .csrf { it.disable() }
-            .authorizeHttpRequests {
-                it.requestMatchers("/auth/**", "/slider/**").permitAll()
-                    .requestMatchers("/api/**").authenticated()
-                    .anyRequest().permitAll()
-            }
-            .sessionManagement {
-                it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            }
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
+   @Bean
+fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    http
+        .cors { it.configurationSource(corsConfigurationSource()) }
+        .csrf { it.disable() }
+        .authorizeHttpRequests {
+            it.requestMatchers("/auth/**", "/slider/**").permitAll()
+                .requestMatchers("/api/**").authenticated()
+                .anyRequest().permitAll()
+        }
+        .sessionManagement {
+            it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        }
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
 
-        return http.build()
+    return http.build()
+}
+@Bean
+fun corsConfigurationSource(): org.springframework.web.cors.CorsConfigurationSource {
+    val config = org.springframework.web.cors.CorsConfiguration().apply {
+        allowedOrigins = listOf("http://localhost:3000") // or "*" if testing
+        allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        allowedHeaders = listOf("*")
+        allowCredentials = true
     }
+
+    val source = org.springframework.web.cors.UrlBasedCorsConfigurationSource()
+    source.registerCorsConfiguration("/**", config)
+    return source
+}
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
